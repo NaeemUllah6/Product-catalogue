@@ -33,7 +33,7 @@ function Navbar() {
                 <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                     <button
                         type="button"
-                        className={`font-medium rounded-lg text-sm px-4 py-2 text-center transition-all duration-300 ${scrolled
+                        className={`hidden md:block font-medium rounded-lg text-sm px-4 py-2 text-center transition-all duration-300 ${scrolled
                             ? 'text-white bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg'
                             : 'text-blue-600 bg-white hover:bg-white/90'
                             }`}

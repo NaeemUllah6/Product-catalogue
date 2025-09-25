@@ -10,8 +10,10 @@ function PaginationButton({ children, active, disabled, onClick, PaginationButto
             onClick={onClick}
             disabled={disabled}
             className={`
+                cursor-pointer
                 ${PaginationButtonClassName ? PaginationButtonClassName : ''}
-                px-4 py-2 text-sm font-medium rounded-md
+                px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium rounded-md
+                min-w-[32px] sm:min-w-[40px] flex items-center justify-center
                 transition-all duration-200 ease-in-out
                 ${active
                     ? 'bg-blue-600 text-white shadow-md hover:bg-blue-700'
@@ -19,7 +21,7 @@ function PaginationButton({ children, active, disabled, onClick, PaginationButto
                 }
                 ${disabled
                     ? 'opacity-50 cursor-not-allowed'
-                    : 'hover:shadow-md transform hover:-translate-y-0.5'
+                    : 'hover:shadow-md transform '
                 }
             `}
         >

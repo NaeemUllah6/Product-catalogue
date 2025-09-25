@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const q = `*[_type == "product" && !(_id in path('drafts.**'))] | order(price asc){
+    const query = `*[_type == "product" && !(_id in path('drafts.**'))] | order(price asc){
       _id,
       title,
       "slug": slug.current,
@@ -14,11 +14,12 @@ export async function GET() {
       "imageUrl": coalesce(image.asset->url, imageUrl),
       category
     }`;
-    const products = await sanityClient.fetch(q);
+
+    const products = await sanityClient.fetch(query);
+
     return NextResponse.json({ products });
-  } catch (e: any) {
-    return NextResponse.json({ error: e?.message || "Failed to fetch" }, { status: 500 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to fetch";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
-
-

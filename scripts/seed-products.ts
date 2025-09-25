@@ -1,20 +1,12 @@
 import { config as loadEnv } from "dotenv";
 loadEnv({ path: ".env.local" });
-import { createClient } from "@sanity/client";
-
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID as string;
-console.log(projectId);
-const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
-const token = process.env.SANITY_WRITE_TOKEN as string;
-
-if (!projectId) throw new Error("Missing NEXT_PUBLIC_SANITY_PROJECT_ID");
-if (!token) throw new Error("Missing SANITY_WRITE_TOKEN");
+import { createClient } from "next-sanity";
 
 const client = createClient({
-  projectId,
-  dataset,
-  token,
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
   apiVersion: "2025-01-01",
+  token: process.env.SANITY_WRITE_TOKEN,
   useCdn: false,
 });
 
@@ -45,39 +37,97 @@ interface SanityDoc {
     current: string;
   };
   image?: {
-    _type: 'image';
-    asset: { _type: 'reference'; _ref: string };
+    _type: "image";
+    asset: { _type: "reference"; _ref: string };
   };
   imageUrl?: string;
 }
 
 const categories: Category[] = [
-  { name: "Clothing", titles: ["Knit Sweater", "Fleece Hoodie", "Denim Jacket", "Cotton Tee", "Linen Shirt", "Puffer Jacket", "Cardigan", "Chino Pants", "Track Pants", "Summer Shorts"] },
-  { name: "Accessories", titles: ["Leather Bag", "Sunglasses", "Silk Scarf", "Belt", "Wallet", "Backpack", "Cap", "Gloves", "Beanie", "Necklace"] },
-  { name: "Footwear", titles: ["Running Sneakers", "Casual Sneakers", "Leather Boots", "Loafers", "Sandals", "High Tops", "Trail Shoes", "Slip-ons", "Court Shoes", "Canvas Shoes"] },
-  { name: "Watches", titles: ["Chrono Watch", "Dress Watch", "Sport Watch", "Digital Watch", "Field Watch", "Diver Watch", "Quartz Watch", "Smart Watch", "Aviator Watch", "Minimal Watch"] },
+  {
+    name: "Clothing",
+    titles: [
+      "Knit Sweater",
+      "Fleece Hoodie",
+      "Denim Jacket",
+      "Cotton Tee",
+      "Linen Shirt",
+      "Puffer Jacket",
+      "Cardigan",
+      "Chino Pants",
+      "Track Pants",
+      "Summer Shorts",
+    ],
+  },
+  {
+    name: "Accessories",
+    titles: [
+      "Leather Bag",
+      "Sunglasses",
+      "Silk Scarf",
+      "Belt",
+      "Wallet",
+      "Backpack",
+      "Cap",
+      "Gloves",
+      "Beanie",
+      "Necklace",
+    ],
+  },
+  {
+    name: "Footwear",
+    titles: [
+      "Running Sneakers",
+      "Casual Sneakers",
+      "Leather Boots",
+      "Loafers",
+      "Sandals",
+      "High Tops",
+      "Trail Shoes",
+      "Slip-ons",
+      "Court Shoes",
+      "Canvas Shoes",
+    ],
+  },
+  {
+    name: "Watches",
+    titles: [
+      "Chrono Watch",
+      "Dress Watch",
+      "Sport Watch",
+      "Digital Watch",
+      "Field Watch",
+      "Diver Watch",
+      "Quartz Watch",
+      "Smart Watch",
+      "Aviator Watch",
+      "Minimal Watch",
+    ],
+  },
 ];
 
 function buildImageQuery(title: string, category: string): string {
   const t = title.toLowerCase();
   const c = category.toLowerCase();
-  if (c === 'footwear') return 'sneakers,shoes,footwear';
-  if (c === 'watches') return 'wrist watch,timepiece,watch';
-  if (c === 'accessories') {
-    if (/sunglass/.test(t)) return 'sunglasses,eyewear,accessories';
-    if (/bag|backpack|leather/.test(t)) return 'leather bag,handbag,backpack';
-    return 'fashion accessories,scarf,belt,wallet';
+  if (c === "footwear") return "sneakers,shoes,footwear";
+  if (c === "watches") return "wrist watch,timepiece,watch";
+  if (c === "accessories") {
+    if (/sunglass/.test(t)) return "sunglasses,eyewear,accessories";
+    if (/bag|backpack|leather/.test(t)) return "leather bag,handbag,backpack";
+    return "fashion accessories,scarf,belt,wallet";
   }
-  if (/hoodie|sweater|knit/.test(t)) return 'knit sweater,hoodie,clothing';
-  if (/jacket|denim/.test(t)) return 'denim jacket,outerwear,clothing';
-  if (/shirt|tee/.test(t)) return 't-shirt,shirt,clothing';
-  if (/pants|chino|track|short/.test(t)) return 'clothing pants,shorts,fashion';
+  if (/hoodie|sweater|knit/.test(t)) return "knit sweater,hoodie,clothing";
+  if (/jacket|denim/.test(t)) return "denim jacket,outerwear,clothing";
+  if (/shirt|tee/.test(t)) return "t-shirt,shirt,clothing";
+  if (/pants|chino|track|short/.test(t)) return "clothing pants,shorts,fashion";
   return `${category},${title}`;
 }
 
 const PICSUM_IDS = [
-  1001,1002,1003,1004,1005,1011,1012,1015,1016,1018,1020,1021,1023,1025,1027,1031,1035,1040,1041,1043,1044,1045,
-  1050,1052,1055,1057,1060,1062,1065,1070,1074,1080,1084,1085,1089,109,110,111,112,113,114
+  1001, 1002, 1003, 1004, 1005, 1011, 1012, 1015, 1016, 1018, 1020, 1021, 1023,
+  1025, 1027, 1031, 1035, 1040, 1041, 1043, 1044, 1045, 1050, 1052, 1055, 1057,
+  1060, 1062, 1065, 1070, 1074, 1080, 1084, 1085, 1089, 109, 110, 111, 112, 113,
+  114,
 ];
 
 function buildImageUrl(_title: string, _category: string, idx: number): string {

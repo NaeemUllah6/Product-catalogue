@@ -90,12 +90,12 @@ export default function ProductsPage() {
     }, [searchQuery, selectedCategory, priceRange, sortOrder, allProducts]);
 
     return (
-        <div className="container px-4 py-14">
+        <div className="container py-14">
             <header className="text-center mb-10">
-                <Heading level={1} className="text-4xl md:text-5xl font-clash font-semibold text-white">
+                <Heading level={1} className="text-[22px] md:text-5xl font-clash font-semibold text-white">
                     Featured Products
                 </Heading>
-                <p className="mt-3 text-white">
+                <p className="mt-3 text-base md:text-lg text-white">
                     Discover our curated collection of premium products
                 </p>
             </header>
@@ -250,12 +250,13 @@ export default function ProductsPage() {
 
             {filteredProducts.length > 0 && (
                 <div className="mt-12 flex flex-col items-center space-y-4">
-                    <div className="flex items-center justify-center space-x-2">
+                    <div className="flex flex-wrap items-center justify-center gap-2">
                         <PaginationButton
                             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                             disabled={currentPage === 1}
                         >
-                            Prev
+                            <span className="hidden sm:inline">Prev</span>
+                            <span className="sm:hidden">←</span>
                         </PaginationButton>
                         {(() => {
                             const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
@@ -285,7 +286,7 @@ export default function ProductsPage() {
                             return pages.map((page, index) => {
                                 if (page === '...') {
                                     return (
-                                        <span key={`ellipsis-${index}`} className="px-3 py-2 text-gray-500">
+                                        <span key={`ellipsis-${index}`} className="px-1 sm:px-3 py-1 sm:py-2 text-gray-500">
                                             {page}
                                         </span>
                                     );
@@ -308,7 +309,8 @@ export default function ProductsPage() {
                             )}
                             disabled={currentPage === Math.ceil(filteredProducts.length / ITEMS_PER_PAGE)}
                         >
-                            Next
+                            <span className="hidden sm:inline">Next</span>
+                            <span className="sm:hidden">→</span>
                         </PaginationButton>
 
                         <PaginationButton
